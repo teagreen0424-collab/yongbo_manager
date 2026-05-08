@@ -217,57 +217,58 @@
       <div class="flex items-center gap-3">
         <label class="flex items-center gap-1 text-xs text-slate-500">
           每页
-          <select
-            v-model.number="pageSize"
-            class="h-7 rounded-lg border border-slate-200 bg-white px-2 text-xs text-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-900/5"
-          >
-            <option :value="20">20</option>
-            <option :value="50">50</option>
-            <option :value="100">100</option>
-          </select>
+          <BaseSelect
+            v-model="pageSize"
+            class="task-page-size-select"
+            :options="pageSizeOptions"
+          />
           条
         </label>
         <div class="pagination flex items-center gap-2">
-          <button
+          <BaseButton
             type="button"
+            variant="ghost"
+            size="sm"
             class="pager-btn"
             :disabled="page <= 1 || refreshingList"
             @click="goToPage(page - 1)"
           >
             上一页
-          </button>
+          </BaseButton>
           <span class="pager-info text-xs text-slate-500">
             第 {{ page }} / {{ totalPages }} 页，已显示 {{ visibleCount }} / {{ tasksStore.listTotal }}
           </span>
           <label class="page-jump text-xs text-slate-500">
             跳至
-            <input
-              v-model.number="jumpPage"
+            <BaseInput
+              v-model="jumpPage"
               type="number"
-              min="1"
-              :max="totalPages"
               class="page-jump-input"
               :disabled="refreshingList"
               @keyup.enter="jumpToPage"
             />
             页
           </label>
-          <button
+          <BaseButton
             type="button"
+            variant="ghost"
+            size="sm"
             class="pager-btn"
             :disabled="refreshingList"
             @click="jumpToPage"
           >
             跳转
-          </button>
-          <button
+          </BaseButton>
+          <BaseButton
             type="button"
+            variant="ghost"
+            size="sm"
             class="pager-btn"
             :disabled="page >= totalPages || refreshingList"
             @click="goToPage(page + 1)"
           >
             下一页
-          </button>
+          </BaseButton>
         </div>
       </div>
     </div>
@@ -307,6 +308,7 @@ import FilingStatusBadge from '@/components/business/FilingStatusBadge.vue'
 import AsyncStateWrapper from '@/components/base/AsyncStateWrapper.vue'
 import BaseButton from '@/components/base/BaseButton.vue'
 import BaseInput from '@/components/base/BaseInput.vue'
+import BaseSelect, { type BaseSelectOption } from '@/components/base/BaseSelect.vue'
 import TaskCreateModal from '@/components/task/TaskCreateModal.vue'
 import DesignerSelectDialog from '@/components/task/DesignerSelectDialog.vue'
 import { tasksApi } from '@/services/api/tasksApi'
@@ -349,6 +351,12 @@ const taskCategoryOptions = [
   { label: '全部', value: '' },
   { label: '常规任务', value: 'normal' },
   { label: '定制任务', value: 'customization' },
+]
+
+const pageSizeOptions: BaseSelectOption[] = [
+  { value: 20, label: '20' },
+  { value: 50, label: '50' },
+  { value: 100, label: '100' },
 ]
 
 function queryString(value: unknown): string {
@@ -1334,28 +1342,15 @@ watch(totalPages, (value) => {
   font-size: 0.75rem;
   color: rgb(100 116 139);
 }
+.task-page-size-select {
+  min-width: 4.75rem;
+}
 .page-jump {
   display: inline-flex;
   align-items: center;
   gap: 0.25rem;
 }
 .page-jump-input {
-  width: 3.5rem;
-  height: 1.75rem;
-  border-radius: 0.5rem;
-  border: 1px solid rgb(226 232 240);
-  background: white;
-  padding: 0 0.5rem;
-  font-size: 0.75rem;
-  color: rgb(51 65 85);
-  outline: none;
-}
-.page-jump-input:focus {
-  border-color: rgb(148 163 184);
-  box-shadow: 0 0 0 2px rgba(15, 23, 42, 0.05);
-}
-.page-jump-input:disabled {
-  cursor: not-allowed;
-  opacity: 0.6;
+  width: 5rem;
 }
 </style>
