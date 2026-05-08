@@ -29,7 +29,6 @@
                 </button>
               </div>
             </div>
-            <p class="field-hint">{{ currentCreateTypeHint }}</p>
           </div>
 
           <div class="task-kind-switch">
@@ -508,7 +507,6 @@ const createTypeOptions: Array<{
   label: string
   kind: TaskKind
   icon: unknown
-  hint: string
 }> = [
   {
     value: 'original',
@@ -516,7 +514,6 @@ const createTypeOptions: Array<{
     label: '原款开发',
     kind: 'ORIGINAL_PRODUCT_DEV',
     icon: Box,
-    hint: '从 ERP 选择已有产品，填写修改要求和参考图。',
   },
   {
     value: 'new_single',
@@ -524,7 +521,6 @@ const createTypeOptions: Array<{
     label: '新款单 SKU',
     kind: 'NEW_PRODUCT_DEV',
     icon: Sparkles,
-    hint: '单个新品，补齐分类、材质、名称、简称、设计需求。',
   },
   {
     value: 'new_batch',
@@ -532,7 +528,6 @@ const createTypeOptions: Array<{
     label: '新款批量',
     kind: 'NEW_PRODUCT_DEV',
     icon: Images,
-    hint: '通过 Excel 四步导入批量 SKU，预览行级错误后提交。',
   },
   {
     value: 'purchase_single',
@@ -540,7 +535,6 @@ const createTypeOptions: Array<{
     label: '采购单 SKU',
     kind: 'PURCHASE_TASK',
     icon: ShoppingCart,
-    hint: '采购任务不走设计审核，必须填写成本、数量和售价。',
   },
   {
     value: 'retouch',
@@ -548,7 +542,6 @@ const createTypeOptions: Array<{
     label: 'P 图任务',
     kind: 'RETOUCH_TASK',
     icon: Wand2,
-    hint: '仅上传图片/附件并填写修改要求，进入精修流程。',
   },
   {
     value: 'customer_customization',
@@ -556,7 +549,6 @@ const createTypeOptions: Array<{
     label: '客户定制',
     kind: 'ORIGINAL_PRODUCT_DEV',
     icon: Palette,
-    hint: '客户来单定制，必须校验 ERP 商品并填写定制业务信息。',
   },
   {
     value: 'regular_customization',
@@ -564,7 +556,6 @@ const createTypeOptions: Array<{
     label: '常规定制',
     kind: 'NEW_PRODUCT_DEV',
     icon: Sparkles,
-    hint: '常规定制新品，必须校验设计源并填写定制业务信息。',
   },
 ]
 
@@ -617,8 +608,6 @@ const isBatchLayout = computed(
 )
 
 const visibleCreateTypes = computed(() => createTypeOptions.filter((option) => option.group === taskGroup.value))
-const currentCreateType = computed(() => createTypeOptions.find((option) => option.value === createType.value) ?? createTypeOptions[0])
-const currentCreateTypeHint = computed(() => currentCreateType.value?.hint ?? '')
 const isCustomizationFlow = computed(() => taskGroup.value === 'customization')
 const canChooseSkuMode = computed(() => false)
 const contextPanelClass = computed(() => ({
@@ -1885,11 +1874,6 @@ async function submit() {
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
-}
-.field-hint {
-  font-size: 0.75rem;
-  color: #64748b;
-  margin: 0;
 }
 .field-hint-error {
   color: #dc2626;
