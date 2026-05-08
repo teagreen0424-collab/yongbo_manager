@@ -21,17 +21,23 @@
         >
           <span class="risk-dot" />
           <span class="risk-message">{{ item.message }}</span>
-          <span v-if="item.refNo" class="risk-ref" :class="{ 'risk-ref--link': isNavigable(item) }">{{ item.refNo }}</span>
+          <span
+            v-if="item.refNo"
+            class="risk-ref"
+            :class="{ 'risk-ref--link': isNavigable(item) }"
+          >{{ item.refNo }}</span>
         </li>
       </ul>
       <div v-if="showToggle" class="risk-footer">
-        <button
+        <BaseButton
           type="button"
           class="risk-toggle"
+          variant="ghost"
+          size="sm"
           @click.stop="toggleExpanded"
         >
           {{ expanded ? '收起' : '查看更多' }}
-        </button>
+        </BaseButton>
       </div>
     </template>
   </div>
@@ -39,6 +45,7 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
+import BaseButton from '@/components/base/BaseButton.vue'
 import type { RiskItem } from '@/types/dashboard'
 import StatusSkeleton from '@/components/common/StatusSkeleton.vue'
 import { useRouter } from 'vue-router'
@@ -170,33 +177,7 @@ function onSelect(item: RiskItem) {
   margin-top: 0.5rem;
   padding-top: 0.25rem;
 }
-/* 参考小黑盒 web：深底、白字、圆角胶囊、轻阴影 */
 .risk-toggle {
   margin: 0;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 1.75rem;
-  padding: 0.25rem 0.9rem;
-  font-size: 0.75rem;
-  font-weight: 500;
-  line-height: 1.2;
-  letter-spacing: 0.02em;
-  color: #fafafa;
-  background: #262626;
-  border: 1px solid #404040;
-  border-radius: 9999px;
-  cursor: pointer;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
-  transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
-}
-.risk-toggle:hover {
-  background: #333333;
-  border-color: #525252;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
-}
-.risk-toggle:active {
-  background: #1a1a1a;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
 }
 </style>
