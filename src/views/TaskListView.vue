@@ -145,7 +145,10 @@
               <span class="task-category-pill" :class="taskCategoryClass(task)">
                 {{ taskCategoryLabel(task) }}
               </span>
-              <WorkflowLaneTag :lane="task.workflowLane" />
+              <WorkflowLaneTag
+                v-if="shouldShowWorkflowLaneTagOnCard(task)"
+                :lane="task.workflowLane"
+              />
               <TaskTypeBadge :type="task.businessType ?? task.taskType" />
             </div>
           </div>
@@ -736,6 +739,22 @@ function taskCategoryLabel(task: Task): string {
   return task.customizationRequired === true || task.workflowLane === 'customization'
     ? '定制任务'
     : '常规任务'
+}
+
+/**
+ * 分类胶囊已展示「常规任务 / 定制任务」时，不再叠加同语义的 WorkflowLaneTag（常规 / 定制），避免顶部拥挤。
+ * 若业务标记为定制但 lane 仍为 normal 等不一致情形，仍保留短标签以免丢失信息。
+ */
+function shouldShowWorkflowLaneTagOnCard(task: Task): boolean {
+  const lane = String(task.workflowLane ?? '').trim().toLowerCase()
+  if (lane !== 'normal' && lane !== 'customization') return false
+
+  const categoryIsCustomization =
+    task.customizationRequired === true || task.workflowLane === 'customization'
+
+  if (categoryIsCustomization && lane === 'customization') return false
+  if (!categoryIsCustomization && lane === 'normal') return false
+  return true
 }
 
 function taskCategoryClass(task: Task): string {

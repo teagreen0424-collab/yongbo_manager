@@ -90,11 +90,11 @@
             min="0"
             step="0.01"
             label="成本单价（CNY）"
-            placeholder="可选，对应 cost-info / business-info"
+            placeholder="请输入成本单价，可不填"
           />
           <label class="flex cursor-pointer items-center gap-2 self-end pb-1 text-sm text-slate-700">
             <input v-model="form.manual_cost_override" type="checkbox" class="rounded border-slate-300" />
-            <span>人工覆盖成本（manual_cost_override）</span>
+            <span>手动指定成本</span>
           </label>
           <BaseInput
             v-model="form.manual_cost_override_reason"
@@ -145,7 +145,11 @@
 
       <section class="form-card">
         <p class="section-eyebrow">保存说明</p>
-        <BaseTextarea v-model="form.save_remark" :rows="2" label="备注（写入各接口 remark，可选）" />
+        <BaseTextarea
+          v-model="form.save_remark"
+          :rows="2"
+          label="备注（如有特殊情况，可填写备注说明）"
+        />
       </section>
     </div>
 
