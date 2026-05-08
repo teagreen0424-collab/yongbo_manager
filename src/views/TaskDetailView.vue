@@ -101,26 +101,42 @@
             </div>
             <div class="detail-top-right">
               <div class="detail-top-actions">
-                <button type="button" class="detail-top-chip" @click="navigateBackToTaskList">
+                <BaseButton
+                  type="button"
+                  class="detail-top-chip"
+                  variant="ghost"
+                  size="sm"
+                  @click="navigateBackToTaskList"
+                >
                   返回
-                </button>
-                <button type="button" class="detail-top-chip" @click="refreshDetail">刷新</button>
-                <button
+                </BaseButton>
+                <BaseButton
+                  type="button"
+                  class="detail-top-chip"
+                  variant="ghost"
+                  size="sm"
+                  @click="refreshDetail"
+                >刷新</BaseButton>
+                <BaseButton
                   v-if="task && !isTempId"
                   type="button"
                   class="detail-top-chip"
+                  variant="ghost"
+                  size="sm"
                   @click="eventLogOpen = true"
                 >
                   事件日志
-                </button>
-                <button
+                </BaseButton>
+                <BaseButton
                   v-if="canAccessPage('task_assets')"
                   type="button"
                   class="detail-top-chip"
+                  variant="ghost"
+                  size="sm"
                   @click="openTaskAssetsPage"
                 >
                   任务资产页
-                </button>
+                </BaseButton>
                 <button
                   v-if="canCancelTask"
                   type="button"
