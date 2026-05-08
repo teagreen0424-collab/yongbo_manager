@@ -24,32 +24,41 @@
       <section class="content-card">
         <h3 class="section-title">用户列表</h3>
         <div class="toolbar">
-          <input
-            v-model.trim="keyword"
-            class="input"
+          <BaseInput
+            v-model="keyword"
+            class="toolbar-field"
             placeholder="搜索用户名 / 姓名"
             @keyup.enter="onSearch"
           />
-          <select v-model="statusFilter" class="input">
-            <option value="">全部状态</option>
-            <option value="active">启用</option>
-            <option value="disabled">已禁用</option>
-          </select>
-          <select v-model="roleFilter" class="input">
-            <option value="">全部角色</option>
-            <option v-for="r in roleOptions" :key="r.code" :value="r.code">
-              {{ r.display }}
-            </option>
-          </select>
-          <select v-model="departmentFilter" class="input">
-            <option value="">全部部门</option>
-            <option v-for="d in departmentOptions" :key="d.value" :value="d.value">{{ d.label }}</option>
-          </select>
-          <select v-model="teamFilter" class="input">
-            <option value="">全部小组</option>
-            <option v-for="t in teamOptionsFiltered" :key="t.value" :value="t.value">{{ t.label }}</option>
-          </select>
-          <button type="button" class="um-btn um-btn--primary um-btn--md toolbar-query" @click="onSearch">查询</button>
+          <BaseSelect
+            v-model="statusFilter"
+            class="toolbar-field"
+            placeholder="全部状态"
+            :options="statusFilterOptions"
+            clearable
+          />
+          <BaseSelect
+            v-model="roleFilter"
+            class="toolbar-field"
+            placeholder="全部角色"
+            :options="roleFilterOptions"
+            clearable
+          />
+          <BaseSelect
+            v-model="departmentFilter"
+            class="toolbar-field"
+            placeholder="全部部门"
+            :options="departmentFilterOptions"
+            clearable
+          />
+          <BaseSelect
+            v-model="teamFilter"
+            class="toolbar-field"
+            placeholder="全部小组"
+            :options="teamFilterOptions"
+            clearable
+          />
+          <BaseButton type="button" variant="primary" class="toolbar-query" @click="onSearch">查询</BaseButton>
         </div>
         <div v-if="listLoading" class="space-y-2">
           <BaseSkeleton width="100%" height="2rem" />
@@ -263,6 +272,9 @@ import {
   formatWorkflowRolesForDisplay,
   workflowRoleApiToDisplay,
 } from '@/domain/user-workflow-roles'
+import BaseButton from '@/components/base/BaseButton.vue'
+import BaseInput from '@/components/base/BaseInput.vue'
+import BaseSelect, { type BaseSelectOption } from '@/components/base/BaseSelect.vue'
 import BaseSkeleton from '@/components/base/BaseSkeleton.vue'
 import BaseEmptyState from '@/components/base/BaseEmptyState.vue'
 import BaseErrorState from '@/components/base/BaseErrorState.vue'
@@ -358,11 +370,23 @@ const createForm = ref({
 })
 
 const totalPages = computed(() => Math.max(1, Math.ceil((pagination.value.total || 0) / pageSize.value)))
+const statusFilterOptions = computed<BaseSelectOption[]>(() => [
+  { value: 'active', label: '启用' },
+  { value: 'disabled', label: '已禁用' },
+])
+const roleFilterOptions = computed<BaseSelectOption[]>(() =>
+  roleOptions.value.map((role) => ({
+    value: role.code,
+    label: role.display,
+  })),
+)
+const departmentFilterOptions = computed<BaseSelectOption[]>(() => departmentOptions.value)
 const teamOptionsFiltered = computed(() =>
   departmentFilter.value
     ? teamOptions.value.filter((t) => !t.department || t.department === departmentFilter.value)
     : teamOptions.value,
 )
+const teamFilterOptions = computed<BaseSelectOption[]>(() => teamOptionsFiltered.value)
 const createTeamOptions = computed(() =>
   createForm.value.department
     ? teamOptions.value.filter((t) => !t.department || t.department === createForm.value.department)
@@ -440,6 +464,7 @@ async function loadUsers() {
   listLoading.value = true
   listError.value = ''
   try {
+    const trimmedKeyword = keyword.value.trim()
     // 部门范围过滤：当前用户仅具备 `department.manage`（DeptAdmin）而无 `user.manage`
     // （HRAdmin/SuperAdmin）时，前端主动带上本部门 scope，避免后端因 scope 计算偏差
     // 泄漏跨部门列表。`user.manage` 持有者不附带 scope，保持全局视图。
@@ -449,7 +474,7 @@ async function loadUsers() {
     const res = await usersApi.list({
       page: page.value,
       page_size: pageSize.value,
-      ...(keyword.value ? { keyword: keyword.value } : {}),
+      ...(trimmedKeyword ? { keyword: trimmedKeyword } : {}),
       ...(statusFilter.value ? { status: statusFilter.value as 'active' | 'disabled' } : {}),
       ...(roleFilter.value ? { role: roleFilter.value } : {}),
       ...(deptScope ? { department: deptScope } : departmentFilter.value ? { department: departmentFilter.value } : {}),
@@ -838,6 +863,10 @@ onMounted(() => {
   gap: 0.75rem;
   margin-bottom: 1rem;
   align-items: end;
+}
+
+.toolbar-field {
+  min-width: 0;
 }
 
 .input {
