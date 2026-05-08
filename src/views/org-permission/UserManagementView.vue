@@ -8,14 +8,13 @@
           <h2 class="page-title">用户与角色管理</h2>
           <p class="page-sub">维护账号、组织归属与工作流角色</p>
         </div>
-        <button
+        <BaseButton
           v-if="canCreateUser"
           type="button"
-          class="um-btn um-btn--primary"
           @click="showCreateModal = true"
         >
           新增用户
-        </button>
+        </BaseButton>
       </header>
     <div v-if="!canManage" class="mt-6">
       <BaseEmptyState title="无管理权限" description="需要组织管理权限才能访问本页。" />
@@ -105,19 +104,19 @@
           <div class="pager-right">
             <label class="pager-label">
               每页
-              <select v-model.number="pageSize" class="input small">
-                <option :value="20">20</option>
-                <option :value="50">50</option>
-                <option :value="100">100</option>
-              </select>
+              <BaseSelect
+                v-model="pageSize"
+                class="pager-page-size"
+                :options="pageSizeOptions"
+              />
             </label>
-            <button type="button" class="um-btn um-btn--ghost" :disabled="page <= 1" @click="goPage(page - 1)">
+            <BaseButton variant="ghost" size="sm" :disabled="page <= 1" @click="goPage(page - 1)">
               上一页
-            </button>
+            </BaseButton>
             <span class="pager-meta">第 {{ page }} / {{ totalPages }} 页</span>
-            <button type="button" class="um-btn um-btn--ghost" :disabled="page >= totalPages" @click="goPage(page + 1)">
+            <BaseButton variant="ghost" size="sm" :disabled="page >= totalPages" @click="goPage(page + 1)">
               下一页
-            </button>
+            </BaseButton>
           </div>
         </div>
       </section>
@@ -387,6 +386,11 @@ const teamOptionsFiltered = computed(() =>
     : teamOptions.value,
 )
 const teamFilterOptions = computed<BaseSelectOption[]>(() => teamOptionsFiltered.value)
+const pageSizeOptions = computed<BaseSelectOption[]>(() => [
+  { value: 20, label: '20' },
+  { value: 50, label: '50' },
+  { value: 100, label: '100' },
+])
 const createTeamOptions = computed(() =>
   createForm.value.department
     ? teamOptions.value.filter((t) => !t.department || t.department === createForm.value.department)
@@ -1028,6 +1032,10 @@ onMounted(() => {
   font-size: 0.75rem;
   color: #71717a;
   font-weight: 500;
+}
+
+.pager-page-size {
+  min-width: 4.75rem;
 }
 
 .modal-mask {
