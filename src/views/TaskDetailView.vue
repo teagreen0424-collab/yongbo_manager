@@ -403,8 +403,7 @@
                     </article>
                     <article class="detail-v3-info-card">
                       <p class="detail-v3-card-kicker">上传设计稿</p>
-                      <p class="detail-v3-card-text">请在上方“设计与资产”区域上传源文件（PSD / AI / 图片）。</p>
-                      <p class="detail-v3-card-muted">此处仅展示流程提示，避免与真实上传入口重复。</p>
+                      <p class="detail-v3-card-text">请在上方"设计与资产"区域上传文件</p>
                     </article>
                     <article class="detail-v3-info-card">
                       <p class="detail-v3-card-kicker">设计资产版本</p>
