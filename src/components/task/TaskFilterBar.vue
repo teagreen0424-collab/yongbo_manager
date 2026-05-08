@@ -84,20 +84,16 @@
     </div>
     <div class="filter-field">
       <span class="field-label">起始日期</span>
-      <input
-        :value="filters.dateFrom"
-        type="date"
-        class="filter-date-input"
-        @input="patchFilters({ dateFrom: ($event.target as HTMLInputElement).value })"
+      <BaseDatePicker
+        :model-value="filters.dateFrom"
+        @update:model-value="patchFilters({ dateFrom: $event })"
       />
     </div>
     <div class="filter-field">
       <span class="field-label">结束日期</span>
-      <input
-        :value="filters.dateTo"
-        type="date"
-        class="filter-date-input"
-        @input="patchFilters({ dateTo: ($event.target as HTMLInputElement).value })"
+      <BaseDatePicker
+        :model-value="filters.dateTo"
+        @update:model-value="patchFilters({ dateTo: $event })"
       />
     </div>
     <div class="filter-bar-trailing">
@@ -117,6 +113,7 @@
 
 <script setup lang="ts">
 import type { LegacyTaskStatus as TaskStatus } from '@/domain/types/task'
+import BaseDatePicker from '@/components/base/BaseDatePicker.vue'
 import BaseSelect, { type BaseSelectOption } from '@/components/base/BaseSelect.vue'
 import BaseButton from '@/components/base/BaseButton.vue'
 import TaskStatusMultiSelect from '@/components/task/TaskStatusMultiSelect.vue'
@@ -261,25 +258,6 @@ function reset() {
   margin: 0;
   font-size: 0.6875rem;
   color: rgb(220 38 38);
-}
-.filter-date-input {
-  width: 100%;
-  height: 2.75rem;
-  border-radius: 0.75rem;
-  border: 1px solid rgb(231 229 228);
-  background: rgb(250 250 249 / 0.8);
-  padding: 0 0.5rem;
-  font-size: 0.875rem;
-  color: rgb(41 37 36);
-  transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
-}
-.filter-date-input:hover {
-  background: rgb(250 250 249);
-}
-.filter-date-input:focus {
-  border-color: rgb(168 162 158);
-  box-shadow: 0 0 0 1px rgb(214 211 209);
-  outline: none;
 }
 /* 与筛选项底缘对齐的尾区：复选+文案与按钮同一水平中线对齐 */
 .filter-bar-trailing {
