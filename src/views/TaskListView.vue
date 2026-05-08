@@ -86,16 +86,6 @@
         >
           {{ batchReceiving ? '接收中...' : '批量接收' }}
         </BaseButton>
-        <BaseButton
-          v-if="can('export.tasks')"
-          size="sm"
-          variant="secondary"
-          disabled
-          title="批量导出尚未对接真实导出接口"
-          @click="batchExport"
-        >
-          批量导出
-        </BaseButton>
         <BaseButton size="sm" variant="ghost" @click="selectedIds.clear()">
           取消选中
         </BaseButton>
@@ -723,11 +713,6 @@ async function batchReceive() {
       : firstMessage
   }
   batchReceiving.value = false
-}
-
-function batchExport() {
-  // v4.2 修复：老板要求 + 批量导出尚未接入真实接口，先禁用假点击并明确提示
-  listActionError.value = '批量导出尚未对接真实导出接口，请先使用导出中心'
 }
 
 // ── 工具函数 ────────────────────────────────────────────────────────────────
